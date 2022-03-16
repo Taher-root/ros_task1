@@ -1,0 +1,18 @@
+#!/usr/bin/python
+import rospy
+
+def radpub():
+    message_pub=rospy.Publisher("/radius",int,queue_size=10)
+    rospy.init_node("noderpb")
+    radius=5
+    rate = rospy.Rate(0.5)
+
+    while not rospy.is_shutdown():
+        message_pub.publish(radius) 
+        print(radius)
+        rate.sleep()
+if __name__ == '__main__':
+    try:
+        radpub()
+    except rospy.ROSInterruptException:
+        pass
