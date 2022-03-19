@@ -57,6 +57,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
+  service1.srv
+  AddTwoInts.srv
   compute_ang_vel.srv
 )
 
@@ -68,10 +70,10 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -160,6 +162,14 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
+scripts/move_tb
+scripts/client.py
+scripts/server.py
+scripts/client_rad.py
+scripts/server_rad.py
+scripts/radius_pb
+scripts/tb_move
+scripts/publisher2
 scripts/publisher1
 scripts/subscriber1
 DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
