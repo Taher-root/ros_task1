@@ -1,33 +1,110 @@
-#! /usr/bin/python
-import rospy
-from geometry_msgs.msg import Twist
+# #! /usr/bin/python
+# import rospy
+# from geometry_msgs.msg import Twist
 
-pub = rospy.Publisher('/cmd_vel_mux/input/navi', Twist, queue_size=1)
-rate = rospy.Rate(2)
+# pub = rospy.Publisher('/cmd_vel_mux/input/navi', Twist, queue_size=1)
+# rate = rospy.Rate(2)
 
-def move(radi):
-    rospy.init_node('noder')
-    move = Twist() 
-    move.linear.x = 0.1 
-    move.angular.z = 0.1//radi
+# def move(radi):
+#     rospy.init_node('noder')
+#     move = Twist() 
+#     move.linear.x = 0.1 
+#     move.angular.z = 0.1//radi
 
-while not rospy.is_shutdown(): 
-    pub.publish(move)
-    rate.sleep()  
-
-
-
-def listening():
-    rospy.init_node("node3")
-    rospy.Subscriber("/radius",int,move)
-    rospy.spin()
+# while not rospy.is_shutdown(): 
+#     pub.publish(move)
+#     rate.sleep()  
 
 
-if __name__ == '__main__':
-    listening()
+
+# def listening():
+#     rospy.init_node("node3")
+#     rospy.Subscriber("/radius",int,move)
+#     rospy.spin()
+
+
+# if __name__ == '__main__':
+#     listening()
 
 
 
 
 
   
+
+#subscriber
+
+#!/usr/bin/python
+import rospy
+from std_msgs.msg import String
+
+from __future__ import print_function
+
+import sys
+import rospy
+from pack.srv import *
+
+data2="String"
+
+
+
+def listen1(data):
+    print(data.data)
+
+def listening():
+    rospy.init_node("move_tb_node")
+    rospy.Subscriber("/radius", String, listen1)
+    rospy.spin()
+
+if __name__ == '__main__':
+    listening()
+
+#client
+
+def listen1(data):
+    global radius
+    radius = int(data.data)
+    print(data.data)
+    # rospy.on_shutdown((getangvel(radius)))
+    rospy.Subscriber("/radius", String, listen1).unregister()
+    print((getangvel(radius)))
+
+
+def listening():
+    rospy.init_node("rad_node")
+    rospy.Subscriber("/radius", String, listen1)
+    rospy.spin()
+
+
+def getangvel(radius):
+    rospy.wait_for_service('service_ang_vel')
+    try:
+        angvel = rospy.ServiceProxy('service_ang_vel', compute_ang_vel)
+        resp2 = angvel(int(radius))
+        return resp2.angular_velocity
+    except rospy.ServiceException as e:
+        print("Service call failed: %s" % e)
+
+
+if __name__ == "__main__":
+    listening()
+
+#publisher
+
+def node1():
+    message_pub=rospy.Publisher("/hello",String,queue_size=10)
+    rospy.init_node("move_tb_node")
+    msg1=String()
+    msg1.data="Hello"
+    rate = rospy.Rate(0.5)
+
+    while not rospy.is_shutdown():
+        message_pub.publish(msg1) 
+        print(msg1)
+        rate.sleep()
+if __name__ == '__main__':
+    try:
+        node1()
+    except rospy.ROSInterruptException:
+        pass
+

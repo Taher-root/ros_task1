@@ -1,10 +1,12 @@
 #!/usr/bin/python
+#import random
 import rospy
 from std_msgs.msg import String
 
 def radpub():
     message_pub=rospy.Publisher("/radius",String,queue_size=10)
     rospy.init_node("noderpb")
+    #msg1=String(random.randint(5, 10))
     msg1=String()
     msg1.data="5"
     rate = rospy.Rate(0.5)

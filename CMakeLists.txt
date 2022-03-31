@@ -166,6 +166,7 @@ scripts/move_tb
 scripts/client.py
 scripts/server.py
 scripts/client_rad.py
+scripts/client_rad_1.py
 scripts/server_rad.py
 scripts/radius_pb
 scripts/tb_move

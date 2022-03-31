@@ -5,26 +5,25 @@ from __future__ import print_function
 import sys
 import rospy
 from std_msgs.msg import String
+from geometry_msgs.msg import Twist
 from pack.srv import *
 
-def check():
-    flag=0
-    
-
+radius = 5
 
 def listen1(data):
     global radius
-    global flag
-    radius=int(data.data)
-    if(radius==data.data):
-        flag=1
-    check()
+    radius = int(data.data)
     print(data.data)
+    # rospy.on_shutdown((getangvel(radius)))
+    # rospy.Subscriber("/radius", String, listen1).unregister()
+    print((getangvel(radius)))
+    move(radius)
 
 def listening():
     rospy.init_node("rad_node")
     rospy.Subscriber("/radius", String, listen1)
     rospy.spin()
+
 
 def getangvel(radius):
     rospy.wait_for_service('service_ang_vel')
@@ -33,13 +32,21 @@ def getangvel(radius):
         resp2 = angvel(int(radius))
         return resp2.angular_velocity
     except rospy.ServiceException as e:
-        print("Service call failed: %s"%e)
+        print("Service call failed: %s" % e)
+
+pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
+# rate = rospy.Rate(0.5)
+
+def move(radius):
+    #rospy.init_node('rad_node')
+    move = Twist() 
+    move.linear.x = 0.1 
+    move.angular.z = getangvel(radius)
+
+# while not rospy.is_shutdown(): 
+#     pub.publish(move)
+#     rate.sleep() 
 
 if __name__ == "__main__":
     listening()
-    print("Hello")
-    print((getangvel(radius)))
-    
-
-
-
+    #print("Hello")

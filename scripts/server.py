@@ -6,12 +6,24 @@ from pack.srv import service1,service1Response
 
 import rospy
 
+
+
 def handle_req(req):
-    print("Returning [%s*%s , %s*%s ]"%(req.x, req.vx, req.y, req.vy))
-    resp1=service1Response()
-    resp1.xi=req.x*req.vx
-    resp1.yi=req.y*req.vy
-    return resp1
+    t=0
+    xint=[]
+    yint=[]
+    while(t<10):
+        print("Returning [%s+%s*%s , %s+%s*%s ]"%(req.x, req.vx, t, req.y, req.vy,t))
+        resp1=service1Response()
+        #print(resp1.xi)
+        (xint).append(req.x+req.vx*t)
+        (yint).append(req.y+req.vy*t)
+        t=t+1
+    resp1.xi=xint
+    print(resp1.xi)
+    resp1.yi=yint
+    print(resp1.yi)
+    return resp1.xi,resp1.yi
 
 def calc_plot():
     rospy.init_node('service_node')
